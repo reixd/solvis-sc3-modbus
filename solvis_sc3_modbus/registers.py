@@ -45,6 +45,16 @@ class VolumeUnit(Unit):
         return final_value
 
 @dataclass
+class VoltUnit(Unit):
+    unit: str = "V"
+    scale: float = 0.1
+
+    @staticmethod
+    def validate(new_value: float) -> float:
+        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
+        return final_value
+
+@dataclass
 class SolvisModbusRegister:
     address: int
     description: str
@@ -117,6 +127,12 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     VOLUME_FLOW_S17 = 33040, "Volumenstrom S17", None, None, VolumeUnit()
     VOLUME_FLOW_S18 = 33041, "Volumenstrom S17", None, None, VolumeUnit()
 
+    ANALOG_IN_1 = 33042, "Analog In 1", None, None, VoltUnit()
+    ANALOG_IN_2 = 33043, "Analog In 2", None, None, VoltUnit()
+    ANALOG_IN_3 = 33044, "Analog In 3", None, None, VoltUnit()
+
+
+
 if __name__ == "__main__":
     # Example usage:
 
@@ -141,3 +157,11 @@ if __name__ == "__main__":
     ReadInputRegistersEnum.VOLUME_FLOW_S17.value = 89
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.value)
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.ANALOG_IN_1)
+    print(ReadInputRegistersEnum.ANALOG_IN_1.value)
+    print(ReadInputRegistersEnum.ANALOG_IN_1.address)
+    ReadInputRegistersEnum.ANALOG_IN_1.value = 2
+    print(ReadInputRegistersEnum.ANALOG_IN_1.value)
+    print(ReadInputRegistersEnum.ANALOG_IN_1.unit)
