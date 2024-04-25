@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, is_dataclass, field
 from enum import Enum, auto
 from typing import Optional, Any, Iterator, List, Iterable
 
@@ -15,16 +15,17 @@ class AnalogOutStatusUnit(Enum):
     HAND_ANALOG = 3
 @dataclass
 class TemperatureUnit:
-    value: float
     scale: str = "°C"
     unit: float = 0.1
 
-    def __post_init__(self):
-        self.final_value = self.value * self.unit
-        if self.final_value >= 220.0:
+    @staticmethod
+    def validate(new_value: float) -> float:
+        final_value = new_value * TemperatureUnit.unit  # Use class attribute or pass as argument
+        if final_value >= 220.0:
             raise ValueError("Interruption Error")
-        elif self.final_value <= -30.0:
+        elif final_value <= -30.0:
             raise ValueError("Short Circuit Error")
+        return new_value
 
 @dataclass
 class SolvisModbusRegister:
@@ -32,7 +33,25 @@ class SolvisModbusRegister:
     description: str
     min: Optional[int]
     max: Optional[int]
-    unit: Optional[Any]
+    unit: Optional[Any] = None
+    _value: Optional[Any] = field(default=None, repr=False, init=False)
+
+    @property
+    def value(self) -> Optional[Any]:
+        return self._value
+
+    @value.setter
+    def value(self, new_value: Optional[Any]):
+        # Check if 'unit' is a dataclass instance and has a 'validate' method
+        if self.unit and hasattr(self.unit, 'validate'):
+            new_value = self.unit.validate(new_value)  # Use the validate method
+
+        # General range validation
+        if self.min is not None and self.max is not None and new_value is not None:
+            if not self.min <= new_value <= self.max:
+                raise ValueError(f"Value '{new_value}' out of range (min={self.min}, max={self.max})")
+
+        self._value = new_value
 
 @dataclass
 class SolvisModbusReadRegister(SolvisModbusRegister):
@@ -42,56 +61,40 @@ class SolvisModbusReadRegister(SolvisModbusRegister):
 class SolvisModbusWriteRegister(SolvisModbusRegister):
     pass
 
-class ReadInputRegistersEnum(Enum):
-    SETUP_1 = SolvisModbusReadRegister(0, "Setup 1", 0, 3, None)
-    SETUP_2 = SolvisModbusReadRegister(1, "Setup 2", 0, 3, None)
+class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
+    SETUP_1 = 0, "Setup 1", 0, 3, None
+    SETUP_2 = 1, "Setup 2", 0, 3, None
 
-    ZIRKULATION_MODE = SolvisModbusReadRegister(2049, "Zirkulation Betriebsart", 0, 3, SolvisZirkulationBetriebsartUnit)
+    ZIRKULATION_MODE = 2049, "Zirkulation Betriebsart", 0, 3, SolvisZirkulationBetriebsartUnit
 
-    ANALOG_OUT_1_STATUS = SolvisModbusReadRegister(3840, "Analog Out 1 Status", 0, 3, AnalogOutStatusUnit)
-    ANALOG_OUT_2_STATUS = SolvisModbusReadRegister(3845, "Analog Out 2 Status", 0, 3, AnalogOutStatusUnit)
-    ANALOG_OUT_3_STATUS = SolvisModbusReadRegister(3850, "Analog Out 3 Status", 0, 3, AnalogOutStatusUnit)
-    ANALOG_OUT_4_STATUS = SolvisModbusReadRegister(3855, "Analog Out 4 Status", 0, 3, AnalogOutStatusUnit)
-    ANALOG_OUT_5_STATUS = SolvisModbusReadRegister(3860, "Analog Out 5 Status", 0, 3, AnalogOutStatusUnit)
-    ANALOG_OUT_6_STATUS = SolvisModbusReadRegister(3865, "Analog Out 6 Status", 0, 3, AnalogOutStatusUnit)
+    ANALOG_OUT_1_STATUS = 3840, "Analog Out 1 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_2_STATUS = 3845, "Analog Out 2 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_3_STATUS = 3850, "Analog Out 3 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_4_STATUS = 3855, "Analog Out 4 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_5_STATUS = 3860, "Analog Out 5 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_6_STATUS = 3865, "Analog Out 6 Status", 0, 3, AnalogOutStatusUnit
 
-    UNIX_TIMESTAMP_HIGH = SolvisModbusReadRegister(32768, "Unix Timestamp high", None, None, None)
-    UNIX_TIMESTAMP_LOW = SolvisModbusReadRegister(32769, "Unix Timestamp low", None, None, None)
+    UNIX_TIMESTAMP_HIGH = 32768, "Unix Timestamp high", None, None, None
+    UNIX_TIMESTAMP_LOW = 32769, "Unix Timestamp low", None, None, None
 
-    VERSION_SC3 = SolvisModbusReadRegister(32770, "Version SC3", None, None, None)
-    VERSION_NBG = SolvisModbusReadRegister(32771, "Version NBG", None, None, None)
+    VERSION_SC3 = 32770, "Version SC3", None, None, None
+    VERSION_NBG = 32771, "Version NBG", None, None, None
 
-    TEMP_S1 = SolvisModbusReadRegister(33024, "Temp S1*", None, None, TemperatureUnit)
+    TEMP_S1 = 33024, "Temp S1*", None, None, TemperatureUnit
 
-
-
-class SolvisSC3ModbusRegisters:
-    def __init__(self, registers: Iterable):
-        # Initialize registers from the enum
-        self.registers = {reg.value.address: reg.value for reg in registers}
-
-    def __getitem__(self, address: int) -> SolvisModbusRegister:
-        return self.registers[address]
-
-    def __setitem__(self, address: int, value: SolvisModbusRegister):
-        self.registers[address] = value
-
-    def __delitem__(self, address: int):
-        del self.registers[address]
-
-    def __iter__(self) -> Iterator[int]:
-        return iter(self.registers)
-
-    def __len__(self):
-        return len(self.registers)
-
-    def __repr__(self):
-        return f"{self.registers}"
 
 if __name__ == "__main__":
     # Example usage:
-    modbus_table = SolvisSC3ModbusRegisters(ReadInputRegistersEnum)
-    print(modbus_table)
-    print(modbus_table[2049])  # Access like a dictionary
-    print(modbus_table[2049].description)
-    print(modbus_table[2049].address)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.ZIRKULATION_MODE)
+    print(ReadInputRegistersEnum.ZIRKULATION_MODE.value)
+    ReadInputRegistersEnum.ZIRKULATION_MODE.value = 3
+    print(ReadInputRegistersEnum.ZIRKULATION_MODE.value)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.TEMP_S1)
+    print(ReadInputRegistersEnum.TEMP_S1.value)
+    print(ReadInputRegistersEnum.TEMP_S1.address)
+    ReadInputRegistersEnum.TEMP_S1.value = 2210
+    print(ReadInputRegistersEnum.TEMP_S1.value)
