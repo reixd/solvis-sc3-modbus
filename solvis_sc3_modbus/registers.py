@@ -80,7 +80,22 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     VERSION_SC3 = 32770, "Version SC3", None, None, None
     VERSION_NBG = 32771, "Version NBG", None, None, None
 
-    TEMP_S1 = 33024, "Temp S1*", None, None, TemperatureUnit
+    TEMP_S1 = 33024, "Temp S1", None, None, TemperatureUnit
+    TEMP_S2 = 33025, "Temp S2", None, None, TemperatureUnit
+    TEMP_S3 = 33026, "Temp S3", None, None, TemperatureUnit
+    TEMP_S4 = 33027, "Temp S4", None, None, TemperatureUnit
+    TEMP_S5 = 33028, "Temp S5", None, None, TemperatureUnit
+    TEMP_S6 = 33029, "Temp S6", None, None, TemperatureUnit
+    TEMP_S7 = 33030, "Temp S7", None, None, TemperatureUnit
+    TEMP_S8 = 33031, "Temp S8", None, None, TemperatureUnit
+    TEMP_S9 = 33032, "Temp S9", None, None, TemperatureUnit
+    TEMP_S10 = 33033, "Temp S10", None, None, TemperatureUnit
+    TEMP_S11 = 33034, "Temp S11", None, None, TemperatureUnit
+    TEMP_S12 = 33035, "Temp S12", None, None, TemperatureUnit
+    TEMP_S13 = 33036, "Temp S13", None, None, TemperatureUnit
+    TEMP_S14 = 33037, "Temp S14", None, None, TemperatureUnit
+    TEMP_S15 = 33038, "Temp S15", None, None, TemperatureUnit
+    TEMP_S16 = 33039, "Temp S16", None, None, TemperatureUnit
 
 
 if __name__ == "__main__":
