@@ -16,17 +16,18 @@ class AnalogOutStatusUnit(Enum):
 
 @dataclass
 class Unit(object):
+    unit: str
 
     def __str__(self) -> str:
-        return self.scale
+        return self.unit
 @dataclass
 class TemperatureUnit(Unit):
-    scale: str = "°C"
-    unit: float = 0.1
+    unit: str = "°C"
+    scale: float = 0.1
 
     @staticmethod
     def validate(new_value: float) -> float:
-        final_value = new_value * TemperatureUnit.unit  # Use class attribute or pass as argument
+        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
         if final_value >= 220.0:
             raise ValueError("Interruption Error")
         elif final_value <= -30.0:
@@ -35,8 +36,13 @@ class TemperatureUnit(Unit):
 
 @dataclass
 class VolumeUnit(Unit):
-    scale: str = "l/min"
-    unit: float = 0.1
+    unit: str = "l/min"
+    scale: float = 0.1
+
+    @staticmethod
+    def validate(new_value: float) -> float:
+        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
+        return final_value
 
 @dataclass
 class SolvisModbusRegister:
