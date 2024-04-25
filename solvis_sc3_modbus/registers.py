@@ -2,19 +2,19 @@ from dataclasses import dataclass, is_dataclass, field
 from enum import Enum, auto
 from typing import Optional, Any, Iterator, List, Iterable
 
-class SolvisZirkulationBetriebsartUnit(Enum):
+class SolvisZirkulationBetriebsartEnum(Enum):
     AUS = 0
     PULS = 1
     ZEIT = 2
     PULS_ZEIT = 3
 
-class AnalogOutStatusUnit(Enum):
+class AnalogOutStatusEnum(Enum):
     AUTO_PWM = 0
     HAND_PWM = 1
     AUTO_ANALOG = 2
     HAND_ANALOG = 3
 
-class ErrorIndicatorUnit(Enum):
+class ErrorIndicatorEnum(Enum):
     FUSE_POWER_SUPPLY_MODULE = 0
     BURNER_ERROR = 1
     STB1_ERROR = 2
@@ -116,14 +116,14 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     SETUP_1 = 0, "Setup 1", 0, 3, None
     SETUP_2 = 1, "Setup 2", 0, 3, None
 
-    ZIRKULATION_MODE = 2049, "Zirkulation Betriebsart", 0, 3, SolvisZirkulationBetriebsartUnit
+    ZIRKULATION_MODE = 2049, "Zirkulation Betriebsart", 0, 3, SolvisZirkulationBetriebsartEnum
 
-    ANALOG_OUT_1_STATUS = 3840, "Analog Out 1 Status", 0, 3, AnalogOutStatusUnit
-    ANALOG_OUT_2_STATUS = 3845, "Analog Out 2 Status", 0, 3, AnalogOutStatusUnit
-    ANALOG_OUT_3_STATUS = 3850, "Analog Out 3 Status", 0, 3, AnalogOutStatusUnit
-    ANALOG_OUT_4_STATUS = 3855, "Analog Out 4 Status", 0, 3, AnalogOutStatusUnit
-    ANALOG_OUT_5_STATUS = 3860, "Analog Out 5 Status", 0, 3, AnalogOutStatusUnit
-    ANALOG_OUT_6_STATUS = 3865, "Analog Out 6 Status", 0, 3, AnalogOutStatusUnit
+    ANALOG_OUT_1_STATUS = 3840, "Analog Out 1 Status", 0, 3, AnalogOutStatusEnum
+    ANALOG_OUT_2_STATUS = 3845, "Analog Out 2 Status", 0, 3, AnalogOutStatusEnum
+    ANALOG_OUT_3_STATUS = 3850, "Analog Out 3 Status", 0, 3, AnalogOutStatusEnum
+    ANALOG_OUT_4_STATUS = 3855, "Analog Out 4 Status", 0, 3, AnalogOutStatusEnum
+    ANALOG_OUT_5_STATUS = 3860, "Analog Out 5 Status", 0, 3, AnalogOutStatusEnum
+    ANALOG_OUT_6_STATUS = 3865, "Analog Out 6 Status", 0, 3, AnalogOutStatusEnum
 
     UNIX_TIMESTAMP_HIGH = 32768, "Unix Timestamp high", None, None, None
     UNIX_TIMESTAMP_LOW = 32769, "Unix Timestamp low", None, None, None
@@ -155,7 +155,7 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     ANALOG_IN_2 = 33043, "Analog In 2", None, None, VoltUnit()
     ANALOG_IN_3 = 33044, "Analog In 3", None, None, VoltUnit()
 
-    DIGITAL_INPUT_ERRORS = 33045, "DigIn Störungen", None, None, ErrorIndicatorUnit
+    DIGITAL_INPUT_ERRORS = 33045, "DigIn Störungen", None, None, ErrorIndicatorEnum
 
     OUTPUT_A1 = 33280, "Ausgang A1", 0, 100, PercentageUnit()
     OUTPUT_A2 = 33280, "Ausgang A2", 0, 200, PercentageUnit(200)
