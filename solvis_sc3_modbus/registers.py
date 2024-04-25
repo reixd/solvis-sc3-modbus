@@ -45,8 +45,25 @@ class SolvisModbusWriteRegister(SolvisModbusRegister):
 class ReadInputRegistersEnum(Enum):
     SETUP_1 = SolvisModbusReadRegister(0, "Setup 1", 0, 3, None)
     SETUP_2 = SolvisModbusReadRegister(1, "Setup 2", 0, 3, None)
+
     ZIRKULATION_MODE = SolvisModbusReadRegister(2049, "Zirkulation Betriebsart", 0, 3, SolvisZirkulationBetriebsart)
-    OUTPUT_STATUS = SolvisModbusReadRegister(3840, "Analog Out 1 Status", 0, 3, AnalogOutStatus)
+
+    ANALOG_OUT_1_STATUS = SolvisModbusReadRegister(3840, "Analog Out 1 Status", 0, 3, AnalogOutStatus)
+    ANALOG_OUT_2_STATUS = SolvisModbusReadRegister(3845, "Analog Out 2 Status", 0, 3, AnalogOutStatus)
+    ANALOG_OUT_3_STATUS = SolvisModbusReadRegister(3850, "Analog Out 3 Status", 0, 3, AnalogOutStatus)
+    ANALOG_OUT_4_STATUS = SolvisModbusReadRegister(3855, "Analog Out 4 Status", 0, 3, AnalogOutStatus)
+    ANALOG_OUT_5_STATUS = SolvisModbusReadRegister(3860, "Analog Out 5 Status", 0, 3, AnalogOutStatus)
+    ANALOG_OUT_6_STATUS = SolvisModbusReadRegister(3865, "Analog Out 6 Status", 0, 3, AnalogOutStatus)
+
+    UNIX_TIMESTAMP_HIGH = SolvisModbusReadRegister(32768, "Unix Timestamp high", None, None, None)
+    UNIX_TIMESTAMP_LOW = SolvisModbusReadRegister(32769, "Unix Timestamp low", None, None, None)
+
+    VERSION_SC3 = SolvisModbusReadRegister(32770, "Version SC3", None, None, None)
+    VERSION_NBG = SolvisModbusReadRegister(32771, "Version NBG", None, None, None)
+
+    TEMP_S1 = SolvisModbusReadRegister(33024, "Temp S1*", None, None, Temperature)
+
+
 
 class SolvisSC3ModbusRegisters:
     def __init__(self, registers: Iterable):
