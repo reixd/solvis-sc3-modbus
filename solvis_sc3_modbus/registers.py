@@ -52,7 +52,7 @@ class VolumeUnit(Unit):
 
     @staticmethod
     def validate(new_value: float) -> float:
-        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
+        final_value = new_value * VolumeUnit.scale  # Use class attribute or pass as argument
         return final_value
 
 @dataclass
@@ -62,7 +62,20 @@ class VoltUnit(Unit):
 
     @staticmethod
     def validate(new_value: float) -> float:
-        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
+        final_value = new_value * VoltUnit.scale  # Use class attribute or pass as argument
+        return final_value
+
+@dataclass
+class PercentageUnit(Unit):
+    unit: str = "%"
+    scale: float = 100
+
+    def __init__(self, scale: float = 100):
+        self.scale = scale
+
+    @staticmethod
+    def validate(new_value: float) -> float:
+        final_value = new_value / PercentageUnit.scale  # Use class attribute or pass as argument
         return final_value
 
 @dataclass
@@ -144,7 +157,20 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
 
     DIGITAL_INPUT_ERRORS = 33045, "DigIn Störungen", None, None, ErrorIndicatorUnit
 
-
+    OUTPUT_A1 = 33280, "Ausgang A1", 0, 100, PercentageUnit()
+    OUTPUT_A2 = 33280, "Ausgang A2", 0, 200, PercentageUnit(200)
+    OUTPUT_A3 = 33280, "Ausgang A3", 0, 100, PercentageUnit()
+    OUTPUT_A4 = 33280, "Ausgang A4", 0, 100, PercentageUnit()
+    OUTPUT_A5 = 33280, "Ausgang A5", 0, 100, PercentageUnit()
+    OUTPUT_A6 = 33280, "Ausgang A6", 0, 100, PercentageUnit()
+    OUTPUT_A7 = 33280, "Ausgang A7", 0, 100, PercentageUnit()
+    OUTPUT_A8 = 33280, "Ausgang A8", 0, 100, PercentageUnit()
+    OUTPUT_A9 = 33280, "Ausgang A9", 0, 100, PercentageUnit()
+    OUTPUT_A10 = 33280, "Ausgang A10", 0, 100, PercentageUnit()
+    OUTPUT_A11 = 33280, "Ausgang A11", 0, 100, PercentageUnit()
+    OUTPUT_A12 = 33280, "Ausgang A12", 0, 100, PercentageUnit()
+    OUTPUT_A13 = 33280, "Ausgang A13", 0, 100, PercentageUnit()
+    OUTPUT_A14 = 33280, "Ausgang A14", 0, 100, PercentageUnit()
 
 if __name__ == "__main__":
     # Example usage:
@@ -178,3 +204,11 @@ if __name__ == "__main__":
     ReadInputRegistersEnum.ANALOG_IN_1.value = 2
     print(ReadInputRegistersEnum.ANALOG_IN_1.value)
     print(ReadInputRegistersEnum.ANALOG_IN_1.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.OUTPUT_A2)
+    print(ReadInputRegistersEnum.OUTPUT_A2.value)
+    print(ReadInputRegistersEnum.OUTPUT_A2.address)
+    ReadInputRegistersEnum.OUTPUT_A2.value = 2
+    print(ReadInputRegistersEnum.OUTPUT_A2.value)
+    print(ReadInputRegistersEnum.OUTPUT_A2.unit)

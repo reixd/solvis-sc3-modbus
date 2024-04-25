@@ -12,7 +12,7 @@ register_address = int(os.getenv('SOLVIS_REG_ADDRESS', 33024))
 def main():
     solvis_client = SolvisSC3ModbusClient(host=host, port=port, unit_id=unit_id, debug=False)
     if solvis_client.connect():
-        data = solvis_client.fetch_data(register_address=register_address, length=1)
+        data = solvis_client.fetch_data(register_address=register_address, length=10)
         print("Data from registers:", data)
     else:
         print("Connection to Solvis SC3 device failed.")
