@@ -13,6 +13,18 @@ class AnalogOutStatus(Enum):
     HAND_PWM = 1
     AUTO_ANALOG = 2
     HAND_ANALOG = 3
+@dataclass
+class Temperature:
+    value: float
+    scale: str = "°C"
+    unit: float = 0.1
+
+    def __post_init__(self):
+        self.final_value = self.value * self.unit
+        if self.final_value >= 220.0:
+            raise ValueError("Interruption Error")
+        elif self.final_value <= -30.0:
+            raise ValueError("Short Circuit Error")
 
 @dataclass
 class SolvisModbusRegister:
