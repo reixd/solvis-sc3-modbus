@@ -14,6 +14,17 @@ class AnalogOutStatusUnit(Enum):
     AUTO_ANALOG = 2
     HAND_ANALOG = 3
 
+class ErrorIndicatorUnit(Enum):
+    FUSE_POWER_SUPPLY_MODULE = 0
+    BURNER_ERROR = 1
+    STB1_ERROR = 2
+    STB2_ERROR = 3
+    BURNER_CM424 = 4
+    SOLAR_PRESSURE = 5
+    NOT_DEFINED = 6     # The name of this value is empty in the specification v1.0 as of 09.2021
+    SYSTEM_PRESSURE = 7
+    CONDENSATE = 8
+
 @dataclass
 class Unit(object):
     unit: str
@@ -130,6 +141,8 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     ANALOG_IN_1 = 33042, "Analog In 1", None, None, VoltUnit()
     ANALOG_IN_2 = 33043, "Analog In 2", None, None, VoltUnit()
     ANALOG_IN_3 = 33044, "Analog In 3", None, None, VoltUnit()
+
+    DIGITAL_INPUT_ERRORS = 33045, "DigIn Störungen", None, None, ErrorIndicatorUnit
 
 
 
