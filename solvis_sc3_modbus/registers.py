@@ -30,8 +30,8 @@ class Temperature:
 class SolvisModbusRegister:
     address: int
     description: str
-    min: int
-    max: int
+    min: Optional[int]
+    max: Optional[int]
     unit: Optional[Any]
 
 @dataclass
