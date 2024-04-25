@@ -37,6 +37,8 @@ class SolvisModbusRegister:
 @dataclass
 class SolvisModbusReadRegister(SolvisModbusRegister):
     pass
+
+@dataclass
 class SolvisModbusWriteRegister(SolvisModbusRegister):
     pass
 
