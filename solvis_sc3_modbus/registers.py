@@ -124,5 +124,14 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.TEMP_S1)
     print(ReadInputRegistersEnum.TEMP_S1.value)
     print(ReadInputRegistersEnum.TEMP_S1.address)
-    ReadInputRegistersEnum.TEMP_S1.value = 2210
+    ReadInputRegistersEnum.TEMP_S1.value = 420
     print(ReadInputRegistersEnum.TEMP_S1.value)
+    print(ReadInputRegistersEnum.TEMP_S1.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.VOLUME_FLOW_S17)
+    print(ReadInputRegistersEnum.VOLUME_FLOW_S17.value)
+    print(ReadInputRegistersEnum.VOLUME_FLOW_S17.address)
+    ReadInputRegistersEnum.VOLUME_FLOW_S17.value = 89
+    print(ReadInputRegistersEnum.VOLUME_FLOW_S17.value)
+    print(ReadInputRegistersEnum.VOLUME_FLOW_S17.unit)
