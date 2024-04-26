@@ -56,6 +56,10 @@ class VolumeUnit(Unit):
         return final_value
 
 @dataclass
+class AmpereUnit(Unit):
+    unit: str = "mA"
+
+@dataclass
 class VoltUnit(Unit):
     unit: str = "V"
     scale: float = 0.1
@@ -81,6 +85,10 @@ class PercentageUnit(Unit):
 @dataclass
 class PWMUnit(PercentageUnit):
     unit: str = "% (PWM)"
+
+@dataclass
+class WattUnit(Unit):
+    unit: str = "W"
 
 @dataclass
 class SolvisModbusRegister:
@@ -183,6 +191,67 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     ANALOG_OUT_O5 = 33298, "Analog Out O5", None, None, None # ToDo select: PWMUnit() / VoltUnit()
     ANALOG_OUT_O6 = 33299, "Analog Out O6", None, None, None # ToDo select: PWMUnit() / VoltUnit()
 
+    BURNER_STAGE_1_RUNTIME = 33536, "Laufzeit Brennerstufe 1", None, None, None
+    BURNER_STAGE_1_STARTUPS = 33537, "Brennerstarts Stufe 1", None, None, None
+    BURNER_STAGE_2_RUNTIME = 33538, "Laufzeit Brennerstufe 2", None, None, None
+
+    HEAT_SOURCE_SX_CURRENT_POWER = 33539, "Wärmeerzeuger SX aktuelle Leistung", None, None, WattUnit()
+
+    IONISATION_CURRENT = 33540, "Ionisationsstrom", None, None, AmpereUnit()
+
+    MESSAGES_COUNT = 33792, "Meldungen Anzahl", None, None, None
+
+    MESSAGE_1_CODE = 33793, "Meldung 1 Code", None, None, None
+    MESSAGE_1_UNIX_TIME_H = 33794, "Meldung 1 UnixZeit H", None, None, None
+    MESSAGE_1_UNIX_TIME_L = 33795, "Meldung 1 UnixZeit L", None, None, None
+    MESSAGE_1_PARAMETER_1 = 33796, "Meldung 1 Par 1", None, None, None
+    MESSAGE_1_PARAMETER_2 = 33797, "Meldung 1 Par 2", None, None, None
+    MESSAGE_2_CODE = 33798, "Meldung 2 Code", None, None, None
+    MESSAGE_2_UNIX_TIME_H = 33799, "Meldung 2 UnixZeit H", None, None, None
+    MESSAGE_2_UNIX_TIME_L = 33800, "Meldung 2 UnixZeit L", None, None, None
+    MESSAGE_2_PARAMETER_1 = 33801, "Meldung 2 Par 1", None, None, None
+    MESSAGE_2_PARAMETER_2 = 33802, "Meldung 2 Par 2", None, None, None
+    MESSAGE_3_CODE = 33803, "Meldung 3 Code", None, None, None
+    MESSAGE_3_UNIX_TIME_H = 33804, "Meldung 3 UnixZeit H", None, None, None
+    MESSAGE_3_UNIX_TIME_L = 33805, "Meldung 3 UnixZeit L", None, None, None
+    MESSAGE_3_PARAMETER_1 = 33806, "Meldung 3 Par 1", None, None, None
+    MESSAGE_3_PARAMETER_2 = 33807, "Meldung 3 Par 2", None, None, None
+    MESSAGE_4_CODE = 33808, "Meldung 4 Code", None, None, None
+    MESSAGE_4_UNIX_TIME_H = 33809, "Meldung 4 UnixZeit H", None, None, None
+    MESSAGE_4_UNIX_TIME_L = 33810, "Meldung 4 UnixZeit L", None, None, None
+    MESSAGE_4_PARAMETER_1 = 33811, "Meldung 4 Par 1", None, None, None
+    MESSAGE_4_PARAMETER_2 = 33812, "Meldung 4 Par 2", None, None, None
+    MESSAGE_5_CODE = 33813, "Meldung 5 Code", None, None, None
+    MESSAGE_5_UNIX_TIME_H = 33814, "Meldung 5 UnixZeit H", None, None, None
+    MESSAGE_5_UNIX_TIME_L = 33815, "Meldung 5 UnixZeit L", None, None, None
+    MESSAGE_5_PARAMETER_1 = 33816, "Meldung 5 Par 1", None, None, None
+    MESSAGE_5_PARAMETER_2 = 33817, "Meldung 5 Par 2", None, None, None
+    MESSAGE_6_CODE = 33818, "Meldung 6 Code", None, None, None
+    MESSAGE_6_UNIX_TIME_H = 33819, "Meldung 6 UnixZeit H", None, None, None
+    MESSAGE_6_UNIX_TIME_L = 33820, "Meldung 6 UnixZeit L", None, None, None
+    MESSAGE_6_PARAMETER_1 = 33821, "Meldung 6 Par 1", None, None, None
+    MESSAGE_6_PARAMETER_2 = 33822, "Meldung 6 Par 2", None, None, None
+    MESSAGE_7_CODE = 33823, "Meldung 7 Code", None, None, None
+    MESSAGE_7_UNIX_TIME_H = 33824, "Meldung 7 UnixZeit H", None, None, None
+    MESSAGE_7_UNIX_TIME_L = 33825, "Meldung 7 UnixZeit L", None, None, None
+    MESSAGE_7_PARAMETER_1 = 33826, "Meldung 7 Par 1", None, None, None
+    MESSAGE_7_PARAMETER_2 = 33827, "Meldung 7 Par 2", None, None, None
+    MESSAGE_8_CODE = 33828, "Meldung 8 Code", None, None, None
+    MESSAGE_8_UNIX_TIME_H = 33829, "Meldung 8 UnixZeit H", None, None, None
+    MESSAGE_8_UNIX_TIME_L = 33830, "Meldung 8 UnixZeit L", None, None, None
+    MESSAGE_8_PARAMETER_1 = 33831, "Meldung 8 Par 1", None, None, None
+    MESSAGE_8_PARAMETER_2 = 33832, "Meldung 8 Par 2", None, None, None
+    MESSAGE_9_CODE = 33833, "Meldung 9 Code", None, None, None
+    MESSAGE_9_UNIX_TIME_H = 33834, "Meldung 9 UnixZeit H", None, None, None
+    MESSAGE_9_UNIX_TIME_L = 33835, "Meldung 9 UnixZeit L", None, None, None
+    MESSAGE_9_PARAMETER_1 = 33836, "Meldung 9 Par 1", None, None, None
+    MESSAGE_9_PARAMETER_2 = 33837, "Meldung 9 Par 2", None, None, None
+    MESSAGE_10_CODE = 33838, "Meldung 10 Code", None, None, None
+    MESSAGE_10_UNIX_TIME_H = 33839, "Meldung 10 UnixZeit H", None, None, None
+    MESSAGE_10_UNIX_TIME_L = 33840, "Meldung 10 UnixZeit L", None, None, None
+    MESSAGE_10_PARAMETER_1 = 33841, "Meldung 10 Par 1", None, None, None
+    MESSAGE_10_PARAMETER_2 = 33842, "Meldung 10 Par 2", None, None, None
+
 if __name__ == "__main__":
     # Example usage:
 
@@ -231,3 +300,19 @@ if __name__ == "__main__":
     ReadInputRegistersEnum.ANALOG_OUT_O4.value = 444
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER)
+    print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.value)
+    print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.address)
+    ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.value = 1
+    print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.value)
+    print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.MESSAGE_8_CODE)
+    print(ReadInputRegistersEnum.MESSAGE_8_CODE.value)
+    print(ReadInputRegistersEnum.MESSAGE_8_CODE.address)
+    ReadInputRegistersEnum.MESSAGE_8_CODE.value = 1
+    print(ReadInputRegistersEnum.MESSAGE_8_CODE.value)
+    print(ReadInputRegistersEnum.MESSAGE_8_CODE.unit)
