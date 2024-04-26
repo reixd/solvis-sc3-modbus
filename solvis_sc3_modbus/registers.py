@@ -1,12 +1,14 @@
-from dataclasses import dataclass, is_dataclass, field
-from enum import Enum, auto
-from typing import Optional, Any, Iterator, List, Iterable
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Optional, Any
+
 
 class SolvisZirkulationBetriebsartEnum(Enum):
     AUS = 0
     PULS = 1
     ZEIT = 2
     PULS_ZEIT = 3
+
 
 class AnalogOutStatusEnum(Enum):
     AUTO_PWM = 0
@@ -16,12 +18,13 @@ class AnalogOutStatusEnum(Enum):
 
 
 class HeatingCircuitStatesEnum(Enum):
-    AUTOMATIC = 2           # Automatik
-    DAY_MODE = 3            # Tagbetrieb
-    REDUCED_OPERATION = 4   # Absenkbetrieb
-    STANDBY = 5             # Standby
-    ECO = 6                 # Eco
-    HOLIDAY = 7             # Urlaub
+    AUTOMATIC = 2  # Automatik
+    DAY_MODE = 3  # Tagbetrieb
+    REDUCED_OPERATION = 4  # Absenkbetrieb
+    STANDBY = 5  # Standby
+    ECO = 6  # Eco
+    HOLIDAY = 7  # Urlaub
+
 
 class ErrorIndicatorEnum(Enum):
     FUSE_POWER_SUPPLY_MODULE = 0
@@ -30,9 +33,10 @@ class ErrorIndicatorEnum(Enum):
     STB2_ERROR = 3
     BURNER_CM424 = 4
     SOLAR_PRESSURE = 5
-    NOT_DEFINED = 6     # The name of this value is empty in the specification v1.0 as of 09.2021
+    NOT_DEFINED = 6  # The name of this value is empty in the specification v1.0 as of 09.2021
     SYSTEM_PRESSURE = 7
     CONDENSATE = 8
+
 
 @dataclass
 class Unit(object):
@@ -40,6 +44,8 @@ class Unit(object):
 
     def __str__(self) -> str:
         return self.unit
+
+
 @dataclass
 class TemperatureUnit(Unit):
     unit: str = "°C"
@@ -54,6 +60,7 @@ class TemperatureUnit(Unit):
             raise ValueError("Short Circuit Error")
         return final_value
 
+
 @dataclass
 class VolumeUnit(Unit):
     unit: str = "l/min"
@@ -64,9 +71,11 @@ class VolumeUnit(Unit):
         final_value = new_value * VolumeUnit.scale  # Use class attribute or pass as argument
         return final_value
 
+
 @dataclass
 class AmpereUnit(Unit):
     unit: str = "mA"
+
 
 @dataclass
 class VoltUnit(Unit):
@@ -77,6 +86,7 @@ class VoltUnit(Unit):
     def validate(new_value: float) -> float:
         final_value = new_value * VoltUnit.scale  # Use class attribute or pass as argument
         return final_value
+
 
 @dataclass
 class PercentageUnit(Unit):
@@ -91,13 +101,16 @@ class PercentageUnit(Unit):
         final_value = new_value / PercentageUnit.scale  # Use class attribute or pass as argument
         return final_value
 
+
 @dataclass
 class PWMUnit(PercentageUnit):
     unit: str = "% (PWM)"
 
+
 @dataclass
 class WattUnit(Unit):
     unit: str = "W"
+
 
 @dataclass
 class SolvisModbusRegister:
@@ -125,13 +138,16 @@ class SolvisModbusRegister:
 
         self._value = new_value
 
+
 @dataclass
 class SolvisModbusReadRegister(SolvisModbusRegister):
     pass
 
+
 @dataclass
 class SolvisModbusWriteRegister(SolvisModbusRegister):
     pass
+
 
 class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     SETUP_1 = 0, "Setup 1", 0, 3, None
@@ -193,12 +209,12 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     OUTPUT_A13 = 33280, "Ausgang A13", 0, 100, PercentageUnit()
     OUTPUT_A14 = 33280, "Ausgang A14", 0, 100, PercentageUnit()
 
-    ANALOG_OUT_O1 = 33294, "Analog Out O1", None, None, None # ToDo select: PWMUnit() / VoltUnit()
-    ANALOG_OUT_O2 = 33295, "Analog Out O2", None, None, None # ToDo select: PWMUnit() / VoltUnit()
-    ANALOG_OUT_O3 = 33296, "Analog Out O3", None, None, None # ToDo select: PWMUnit() / VoltUnit()
-    ANALOG_OUT_O4 = 33297, "Analog Out O4", None, None, PWMUnit()   # WP Umwälzpumpe / Heat Pump Circulation Pump
-    ANALOG_OUT_O5 = 33298, "Analog Out O5", None, None, None # ToDo select: PWMUnit() / VoltUnit()
-    ANALOG_OUT_O6 = 33299, "Analog Out O6", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O1 = 33294, "Analog Out O1", None, None, None  # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O2 = 33295, "Analog Out O2", None, None, None  # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O3 = 33296, "Analog Out O3", None, None, None  # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O4 = 33297, "Analog Out O4", None, None, PWMUnit()  # WP Umwälzpumpe / Heat Pump Circulation Pump
+    ANALOG_OUT_O5 = 33298, "Analog Out O5", None, None, None  # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O6 = 33299, "Analog Out O6", None, None, None  # ToDo select: PWMUnit() / VoltUnit()
 
     BURNER_STAGE_1_RUNTIME = 33536, "Laufzeit Brennerstufe 1", None, None, None
     BURNER_STAGE_1_STARTUPS = 33537, "Brennerstarts Stufe 1", None, None, None
@@ -261,16 +277,17 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     MESSAGE_10_PARAMETER_1 = 33841, "Meldung 10 Par 1", None, None, None
     MESSAGE_10_PARAMETER_2 = 33842, "Meldung 10 Par 2", None, None, None
 
+
 if __name__ == "__main__":
     # Example usage:
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.ZIRKULATION_MODE)
     print(ReadInputRegistersEnum.ZIRKULATION_MODE.value)
     ReadInputRegistersEnum.ZIRKULATION_MODE.value = 3
     print(ReadInputRegistersEnum.ZIRKULATION_MODE.value)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.TEMP_S1)
     print(ReadInputRegistersEnum.TEMP_S1.value)
     print(ReadInputRegistersEnum.TEMP_S1.address)
@@ -278,7 +295,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.TEMP_S1.value)
     print(ReadInputRegistersEnum.TEMP_S1.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17)
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.value)
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.address)
@@ -286,7 +303,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.value)
     print(ReadInputRegistersEnum.VOLUME_FLOW_S17.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.ANALOG_IN_1)
     print(ReadInputRegistersEnum.ANALOG_IN_1.value)
     print(ReadInputRegistersEnum.ANALOG_IN_1.address)
@@ -294,7 +311,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.ANALOG_IN_1.value)
     print(ReadInputRegistersEnum.ANALOG_IN_1.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.OUTPUT_A2)
     print(ReadInputRegistersEnum.OUTPUT_A2.value)
     print(ReadInputRegistersEnum.OUTPUT_A2.address)
@@ -302,7 +319,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.OUTPUT_A2.value)
     print(ReadInputRegistersEnum.OUTPUT_A2.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.ANALOG_OUT_O4)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.address)
@@ -310,7 +327,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER)
     print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.value)
     print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.address)
@@ -318,7 +335,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.value)
     print(ReadInputRegistersEnum.HEAT_SOURCE_SX_CURRENT_POWER.unit)
 
-    print(80*'#')
+    print(80 * '#')
     print(ReadInputRegistersEnum.MESSAGE_8_CODE)
     print(ReadInputRegistersEnum.MESSAGE_8_CODE.value)
     print(ReadInputRegistersEnum.MESSAGE_8_CODE.address)

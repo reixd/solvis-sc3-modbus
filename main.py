@@ -9,6 +9,7 @@ port = int(os.getenv('SOLVIS_PORT', 502))
 unit_id = int(os.getenv('SOLVIS_UNIT_ID', 101))
 register_address = int(os.getenv('SOLVIS_REG_ADDRESS', 33024))
 
+
 def main():
     solvis_client = SolvisSC3ModbusClient(host=host, port=port, unit_id=unit_id, debug=False)
     if solvis_client.connect():
@@ -16,6 +17,7 @@ def main():
         print("Data from registers:", data)
     else:
         print("Connection to Solvis SC3 device failed.")
+
 
 if __name__ == "__main__":
     main()
