@@ -14,11 +14,9 @@ class SolvisSC3ModbusClient(object):
 
     def __getattr__(self, attr):
         if attr.startswith("get_"):
-            _register_name = attr.split('_', 1)[1:][0].upper()  # Remove 'fetch_' prefix and convert to uppercase
             try:
-                _register = ReadInputRegistersEnum[_register_name]
-                _register.value = self.get(_register.address)
-                return _register.value, _register.unit.unit
+                _register_name = attr.split('_', 1)[1:][0].upper()  # Remove 'fetch_' prefix and convert to uppercase
+                return self.get(_register_name)
             except KeyError:
                 raise AttributeError(f"No matching enum member found for {attr}")
         else:
@@ -33,7 +31,15 @@ class SolvisSC3ModbusClient(object):
             logger.error("Failed to connect to Solvis SC3 device.")
             return False
 
-    def get(self, register_address, length=1):
+    def get(self, register_name: str):
+        try:
+            _register = ReadInputRegistersEnum[register_name]
+            _register.value = self.fetch_data(_register.address)
+            return _register.value, _register.unit.unit
+        except KeyError:
+            raise AttributeError(f"No matching enum member found for {register_name}")
+
+    def fetch_data(self, register_address, length=1):
         """
         Fetch data from a specific register.
 
@@ -55,7 +61,7 @@ class SolvisSC3ModbusClient(object):
                 logger.warning(f"Failed to fetch data from register {register_address}.")
                 return None
             else:
-                logger.info(f"Data fetched from register {register_address}: {data}")
+                logger.debug(f"Data fetched from register {register_address}: {data}")
                 # Simplify return statement
                 return data[0] if length == 1 else data
         except Exception as e:
