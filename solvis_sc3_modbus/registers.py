@@ -14,6 +14,15 @@ class AnalogOutStatusEnum(Enum):
     AUTO_ANALOG = 2
     HAND_ANALOG = 3
 
+
+class HeatingCircuitStatesEnum(Enum):
+    AUTOMATIC = 2           # Automatik
+    DAY_MODE = 3            # Tagbetrieb
+    REDUCED_OPERATION = 4   # Absenkbetrieb
+    STANDBY = 5             # Standby
+    ECO = 6                 # Eco
+    HOLIDAY = 7             # Urlaub
+
 class ErrorIndicatorEnum(Enum):
     FUSE_POWER_SUPPLY_MODULE = 0
     BURNER_ERROR = 1
