@@ -50,6 +50,7 @@ class Unit(object):
 class TemperatureUnit(Unit):
     unit: str = "°C"
     scale: float = 0.1
+    rounddigits: int = 2
 
     @staticmethod
     def validate(new_value: float) -> float:
@@ -58,7 +59,7 @@ class TemperatureUnit(Unit):
             raise ValueError("Interruption Error")
         elif final_value <= -30.0:
             raise ValueError("Short Circuit Error")
-        return final_value
+        return round(final_value, TemperatureUnit.rounddigits)
 
 
 @dataclass
