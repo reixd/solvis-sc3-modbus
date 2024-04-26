@@ -79,6 +79,10 @@ class PercentageUnit(Unit):
         return final_value
 
 @dataclass
+class PWMUnit(PercentageUnit):
+    unit: str = "% (PWM)"
+
+@dataclass
 class SolvisModbusRegister:
     address: int
     description: str
@@ -172,6 +176,13 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     OUTPUT_A13 = 33280, "Ausgang A13", 0, 100, PercentageUnit()
     OUTPUT_A14 = 33280, "Ausgang A14", 0, 100, PercentageUnit()
 
+    ANALOG_OUT_O1 = 33294, "Analog Out O1", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O2 = 33295, "Analog Out O2", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O3 = 33296, "Analog Out O3", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O4 = 33297, "Analog Out O4", None, None, PWMUnit()   # WP Umwälzpumpe / Heat Pump Circulation Pump
+    ANALOG_OUT_O5 = 33298, "Analog Out O5", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+    ANALOG_OUT_O6 = 33299, "Analog Out O6", None, None, None # ToDo select: PWMUnit() / VoltUnit()
+
 if __name__ == "__main__":
     # Example usage:
 
@@ -212,3 +223,11 @@ if __name__ == "__main__":
     ReadInputRegistersEnum.OUTPUT_A2.value = 2
     print(ReadInputRegistersEnum.OUTPUT_A2.value)
     print(ReadInputRegistersEnum.OUTPUT_A2.unit)
+
+    print(80*'#')
+    print(ReadInputRegistersEnum.ANALOG_OUT_O4)
+    print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
+    print(ReadInputRegistersEnum.ANALOG_OUT_O4.address)
+    ReadInputRegistersEnum.ANALOG_OUT_O4.value = 444
+    print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
+    print(ReadInputRegistersEnum.ANALOG_OUT_O4.unit)
