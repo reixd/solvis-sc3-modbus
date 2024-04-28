@@ -41,67 +41,74 @@ class ErrorIndicatorEnum(Enum):
 @dataclass
 class Unit(object):
     unit: str
+    rounddigits: int = 2
+    scale: float = 1.0
 
     def __str__(self) -> str:
         return self.unit
 
+    # This method must be overridden in subclasses
+    @staticmethod
+    def _check_values(value: float, scale: float) -> bool:
+        return True
+
+    def validate(self, value: float) -> float:
+        return self.validate_static(value, self.__class__, self.rounddigits, self.scale)
+
+    @staticmethod
+    def validate_static(value: float, cls, rounddigits: int = 2, scale: Optional[float] = None) -> float:
+        if value is None or rounddigits is None:
+            raise ValueError("Invalid value")
+
+        if scale is not None:
+            value *= scale
+
+        cls._check_values(value, scale)
+
+        return round(value, rounddigits)
 
 @dataclass
 class TemperatureUnit(Unit):
     unit: str = "°C"
     scale: float = 0.1
-    rounddigits: int = 2
 
-    @staticmethod
-    def validate(new_value: float) -> float:
-        final_value = new_value * TemperatureUnit.scale  # Use class attribute or pass as argument
-        if final_value >= 220.0:
+    def _check_values(value: float, scale: float) -> bool:
+        if value >= 220.0:  # Example condition, adjust logic as needed
             raise ValueError("Interruption Error")
-        elif final_value <= -30.0:
+        elif value <= -30.0:
             raise ValueError("Short Circuit Error")
-        return round(final_value, TemperatureUnit.rounddigits)
-
+        return True
 
 @dataclass
 class VolumeUnit(Unit):
     unit: str = "l/min"
     scale: float = 0.1
 
-    @staticmethod
-    def validate(new_value: float) -> float:
-        final_value = new_value * VolumeUnit.scale  # Use class attribute or pass as argument
-        return final_value
-
 
 @dataclass
 class AmpereUnit(Unit):
     unit: str = "mA"
-
 
 @dataclass
 class VoltUnit(Unit):
     unit: str = "V"
     scale: float = 0.1
 
-    @staticmethod
-    def validate(new_value: float) -> float:
-        final_value = new_value * VoltUnit.scale  # Use class attribute or pass as argument
-        return final_value
-
 
 @dataclass
 class PercentageUnit(Unit):
     unit: str = "%"
-    scale: float = 100
+    scale: float = 1
 
-    def __init__(self, scale: float = 100):
+    def __init__(self, scale: float = 1):
+        if scale <= 0:
+            raise ZeroDivisionError("Scale must be greater than 0")
         self.scale = scale
 
-    @staticmethod
-    def validate(new_value: float) -> float:
-        final_value = new_value / PercentageUnit.scale  # Use class attribute or pass as argument
-        return final_value
-
+    def _check_values(value: float, scale: float) -> bool:
+        if value > (100.0 * scale) or value < (0.0 * scale):
+            raise ValueError("Out of Boundaries")
+        return True
 
 @dataclass
 class PWMUnit(PercentageUnit):
@@ -196,7 +203,7 @@ class ReadInputRegistersEnum(SolvisModbusRegister, Enum):
     DIGITAL_INPUT_ERRORS = (33045, "DigIn Störungen", None, None, ErrorIndicatorEnum)
 
     OUTPUT_A1 = (33280, "Ausgang A1", 0, 100, PercentageUnit())
-    OUTPUT_A2 = (33280, "Ausgang A2", 0, 200, PercentageUnit(200))
+    OUTPUT_A2 = (33280, "Ausgang A2", 0, 200, PercentageUnit(2.0))
     OUTPUT_A3 = (33280, "Ausgang A3", 0, 100, PercentageUnit())
     OUTPUT_A4 = (33280, "Ausgang A4", 0, 100, PercentageUnit())
     OUTPUT_A5 = (33280, "Ausgang A5", 0, 100, PercentageUnit())
@@ -324,7 +331,7 @@ if __name__ == "__main__":
     print(ReadInputRegistersEnum.ANALOG_OUT_O4)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.address)
-    ReadInputRegistersEnum.ANALOG_OUT_O4.value = 444
+    ReadInputRegistersEnum.ANALOG_OUT_O4.value = 44
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.value)
     print(ReadInputRegistersEnum.ANALOG_OUT_O4.unit)
 
